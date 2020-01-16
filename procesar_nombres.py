@@ -3,6 +3,7 @@ import sys
 import re
 import unicodedata
 
+
 rootdir = sys.argv[1]
 
 if rootdir[-1] != "/":
@@ -28,14 +29,15 @@ for folder, subs, files in os.walk(rootdir):
     # print("sin acento: ", new_folder_name)
     folder_matches = re.findall(regex, folder)
     if folder_matches:
-        if folder != new_folder_name:
-            if os.path.isdir(new_folder_name):
-                new_folder_name = new_folder_name + "_" + str(i)
-                os.rename(folder, new_folder_name)
-                i += 1
-            else:
-                # print("no existe el folder se renombra: ", new_folder_name)
-                os.rename(folder, new_folder_name)
+        if folder.upper() != new_folder_name.upper():
+            if folder.lower() != new_folder_name.lower():
+                if os.path.isdir(new_folder_name):
+                    new_folder_name = new_folder_name + "_" + str(i)
+                    os.rename(folder, new_folder_name)
+                    i += 1
+                else:
+                    # print("no existe el folder se renombra: ", new_folder_name)
+                    os.rename(folder, new_folder_name)
 
 # acentos para archivos:
 print("acentos para archivos")
@@ -46,14 +48,15 @@ for folder, subs, files in os.walk(rootdir):
         file_matches = re.findall(regex, filename)
         if file_matches:
             fname, fextension = os.path.splitext(folder+filename)
-            if filename != new_file_name:
-                if os.path.isfile(folder+"/"+new_file_name):
-                    new_file_name = new_file_name.replace( fextension, "_" + str(j) + fextension )
-                    os.rename(folder+"/"+filename, folder+"/"+new_file_name)
-                    j += 1
-                else:
-                    # print("no existe el archivo, se renombra")
-                    os.rename(folder+"/"+filename, folder+"/"+new_file_name)
+            if filename.upper() != new_file_name.upper():
+                if filename.lower() != new_file_name.lower():
+                    if os.path.isfile(folder+"/"+new_file_name):
+                        new_file_name = new_file_name.replace( fextension, "_" + str(j) + fextension )
+                        os.rename(folder+"/"+filename, folder+"/"+new_file_name)
+                        j += 1
+                    else:
+                        # print("no existe el archivo, se renombra")
+                        os.rename(folder+"/"+filename, folder+"/"+new_file_name)
 
 # caracteres especiales:
 print("Procesando carpetas en: ", rootdir)
